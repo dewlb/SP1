@@ -6,10 +6,15 @@ The purpose of the contact manager is to allow users to login and manage contact
 Team Members:
 
 Ajay Beaufort (API)
+
 Gracie Doherty (Frontend)
+
 Ethan Jewell (Project Manager)
+
 Garrett Miller (Database)
+
 Hector Ramos (API)
+
 Veronica Vargas (Frontend)
 
 Contents:
