@@ -3,7 +3,7 @@ This is the repository for the files involved in our web-based contact manager. 
 
 The purpose of the contact manager is to allow users to login and manage contacts, which they can add, update, or delete.
 
-Team Members:
+------------------Team Members------------------
 
 Ajay Beaufort (API)
 
@@ -17,6 +17,6 @@ Hector Ramos (API)
 
 Veronica Vargas (Frontend)
 
-Contents:
+--------------------Contents--------------------
 
 LAMPAPI - A folder of our API files and documentation
