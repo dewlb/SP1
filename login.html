@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script type="text/javascript" src="js/code.js"></script>
+    <title>&#129331;TTYL! || Login/Register</title>
+</head>
+<body>
+    <h1>Log in/Register</h1>
+
+<div id="loginDiv">
+	<span id="inner-title">LOG IN</span> </br>
+	<input type="text" id="loginName" placeholder="Username" autocomplete="username" />
+	<input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password" />
+	<button type="button" id="loginButton" class="buttons" onclick="doLogin();">Sign in</button>
+	<span id="loginResult"></span>
+</div>
+
+<!-- We should implement RegEx (expected input) later on. -->
+<div id = "registerDiv">
+	<span id = "register">Register</span>
+	</br>
+	<input type="text" id="firstName" placeholder="First Name" autocomplete="given-name" />
+	<input type="text" id="lastName" placeholder="Last Name" autocomplete="family-name" />
+	<input type="text" id="username" placeholder="Username" autocomplete="username" />
+	<input type="password" id="password" placeholder="Password" autocomplete="new-password" />
+	<button type = "button" id = "registerButton" class = "buttons" onclick = "doSignUp();">Sign up</button>
+	<span id = "registerResult"></span>
+
+</div>
+</body>
+</html>
