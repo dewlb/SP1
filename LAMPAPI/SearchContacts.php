@@ -12,7 +12,7 @@
         returnWithError($conn->connect_error);
     }
     else{
-        $stmnt = $conn->prepare("select Name from Contacts where Name like ? and UserID=?");
+        $stmnt = $conn->prepare("select * from Contacts where Name like ? and UserID=?");
         $contactName = "%" . $inData["search"] . "%";
         $stmnt->bind_param("ss", $contactName, $inData["userID"]);
         $stmnt->execute();
@@ -21,10 +21,12 @@
 
         while($row = $result->fetch_assoc()) {
             if($searchCount > 0){
-                $searchResults .= ",";
+                $searchResults .= "," . PHP_EOL;
             }
+            //increment search count and append search results
             $searchCount++;
-            $searchResults .= '"' . $row["Name"] . '"';
+            $searchResults .= '{"Name":"' . $row["Name"]. '", "Email":"' .$row["Email"]. '", "Phone":"' .$row["Phone"]. '", "ID":"' .$row["ID"]. '", "UserID":"' .$row["UserID"]. '"}';
+
         }
 
         if($searchCount == 0){
@@ -49,7 +51,8 @@
     }
 
     function returnWithError($err){
-        $retValue = '{"id":0,"firstName":"","lastName":"","error":"' . $err . '"}';
+        //$retValue = '{"id":0,"firstName":"","lastName":"","error":"' . $err . '"}';
+        $retValue = '{"error":"' . $err . '"}';
         sendResultInfoAsJson($retValue);
     }
 
