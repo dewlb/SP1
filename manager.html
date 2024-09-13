@@ -66,6 +66,27 @@
         #contactForm {
             display: none;
         }
+
+	
+	#password-feedback {
+    list-style-type: none; /* Removes default list styling */
+    padding: 0; /* Removes default padding */
+    margin: 0; /* Removes default margin */
+}
+
+#password-feedback li {
+    margin-bottom: 5px; /* Adjust spacing as needed */
+    display: flex; /* Align icons and text horizontally */
+    align-items: center; /* Vertically center items */
+}
+
+#length-icon, #letter-icon, #number-icon, #special-icon {
+    font-size: 16px; /* Adjust size as needed */
+    color: black; /* Set color to black */
+    margin-right: 10px; /* Space between icon and text */
+}
+
+
     </style>
 </head>
 <body onload="loadContacts()">
