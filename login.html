@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<script type="text/javascript" src="js/code.js"></script>
-    <title>&#129331;TTYL! || Login/Register</title>
+    <title>TTYL! || Login/Register</title>
 </head>
 <body>
     <h1>Log in/Register</h1>
@@ -16,6 +16,15 @@
 	<button type="button" id="loginButton" class="buttons" onclick="doLogin();">Sign in</button>
 	<span id="loginResult"></span>
 </div>
+
+<script>
+function showPasswordFeedback() {
+    var password = document.getElementById("password").value;
+    var feedback = validatePassword(password);
+    document.getElementById("password-feedback").innerText = feedback;
+}
+</script>
+
 
 <!-- We should implement RegEx (expected input) later on. -->
 <div id = "registerDiv">
@@ -29,5 +38,16 @@
 	<span id = "registerResult"></span>
 
 </div>
+
+
+<p>Password must meet the following requirements:</p>
+<ul>
+    <li id="req-length"><span id="length-icon"></span> At least 8 characters</li>
+    <li id="req-letter"><span id="letter-icon"></span> Contains at least one letter</li>
+    <li id="req-number"><span id="number-icon"></span> Contains at least one number</li>
+    <li id="req-special"><span id="special-icon"></span> Contains at least one special character</li>
+</ul>
+
+
 </body>
 </html>
