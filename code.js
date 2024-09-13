@@ -165,15 +165,20 @@ function addContact() {
     xhr.send(jsonPayload);
 }
 
-
-
-
 function doSignUp() {
     firstName = document.getElementById("firstName").value;
     lastName = document.getElementById("lastName").value;
     let username = document.getElementById("username").value;
     let password = document.getElementById("password").value;
 
+    // Validate password and check if it meets all requirements
+    let passwordFeedback = validatePassword(password);
+    if (passwordFeedback !== "Password meets all requirements.") {
+        document.getElementById("registerResult").innerHTML = passwordFeedback;
+        return;
+    }
+
+    // Validate other fields
     if (!checkSignUp(firstName, lastName, username, password)) {
         document.getElementById("registerResult").innerHTML = "Please fill out all fields.";
         return;
@@ -191,10 +196,7 @@ function doSignUp() {
 
     xhr.onreadystatechange = function () {
         if (this.readyState == 4) {
-
-            //403 http return is Forbidden code error.
-            if(this.status == 403)
-            {
+            if (this.status == 403) {
                 document.getElementById("registerResult").innerHTML = "User already exists.";
                 return;
             }
@@ -306,8 +308,76 @@ function doLogout() {
 }
 
 function checkSignUp(firstName, lastName, username, password) {
-    return firstName !== "" && lastName !== "" && username !== "" && password !== "";
+    // Validate all fields
+    if (firstName === "" || lastName === "" || username === "" || password === "") {
+        return "All fields must be filled out.";
+    }
+
+    // Check password requirements
+    var passwordFeedback = validatePassword(password);
+    if (passwordFeedback === "Password meets all requirements.") {
+        return true; // All requirements are met
+    } else {
+        return passwordFeedback; // Return specific feedback
+    }
 }
+
+
+// Function to validate the password
+function validatePassword(password) {
+    const lengthIcon = document.getElementById("length-icon");
+    const letterIcon = document.getElementById("letter-icon");
+    const numberIcon = document.getElementById("number-icon");
+    const specialIcon = document.getElementById("special-icon");
+
+    // Reset icons to X marks
+    lengthIcon.textContent = '\u274C'; 
+    letterIcon.textContent = '\u274C'; 
+    numberIcon.textContent = '\u274C'; 
+    specialIcon.textContent = '\u274C'; 
+
+    var feedback = [];
+
+    if (password.length < 8 || password.length > 32) {
+        feedback.push("");
+    } else {
+        lengthIcon.textContent = '\u2714'; 
+    }
+
+    if (!/[A-Za-z]/.test(password)) {
+        feedback.push("");
+    } else {
+        letterIcon.textContent = '\u2714'; 
+    }
+
+    if (!/\d/.test(password)) {
+        feedback.push("");
+    } else {
+        numberIcon.textContent = '\u2714'; 
+    }
+
+    if (!/[@$!%*?&]/.test(password)) {
+        feedback.push("");
+    } else {
+        specialIcon.textContent = '\u2714'; 
+    }
+
+    return feedback.length > 0 ? feedback.join(" ") : "Password meets all requirements.";
+}
+
+
+// Function to handle real-time password feedback
+function showPasswordFeedback() {
+    var password = document.getElementById("loginPassword").value;
+    var feedback = validatePassword(password);
+    var feedbackElement = document.getElementById("password-feedback");
+
+    // Clear previous feedback
+    feedbackElement.innerText = feedback;
+}
+
+// Attach the function to the input event
+document.getElementById("loginPassword").addEventListener("input", showPasswordFeedback);
 
 function addCheck(firstName, lastName, Phone, Email)
 {
