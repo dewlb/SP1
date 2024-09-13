@@ -1,0 +1,10 @@
+insert into Users (FirstName,LastName,Login,Password) VALUES ('Paris','Hilton','Paris','tinkerbell');
+insert into Users (FirstName,LastName,Login,Password) VALUES ('Donald','Trump','Trump','yourefired');
+insert into Users (FirstName,LastName,Login,Password) VALUES ('Mark','Zuckerberg','TheZuck','dadada');
+insert into Users (FirstName,LastName,Login,Password) VALUES ('Garrett','Miller','gmill','WeLoveCOP4331!');
+
+insert into Contacts (Name,Phone,Email,UserID) values ('Jenny', '555-867-5309','tommytutone@columbia.com','1');
+insert into Contacts (Name,Phone,Email,UserID) values ('Soulja Boy', '678-999-8212','souljaboy@tellem.com','1');
+insert into Contacts (Name,Phone,Email,UserID) values ('JGWentworth', '877-CASHNOW','jg@wentworth.com','1');
+insert into Contacts (Name,Phone,Email,UserID) values ('John Doe', '111-111-1111','john@doe.com','2');
+insert into Contacts (Name,Phone,Email,UserID) values ('Jane Doe', '222-222-222','jane@doe.com','3');
