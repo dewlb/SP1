@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" src="js/code.js"></script>
+    <title>TTYL! || Contact Manager</title>
+    <style>
+        /* Popup container - can be anything you want */
+        .popup {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        /* The actual popup */
+        .popup .popuptext {
+            visibility: hidden;
+            width: 160px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 8px 0;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -80px;
+        }
+
+        /* Popup arrow */
+        .popup .popuptext::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #555 transparent transparent transparent;
+        }
+
+        /* Toggle this class - hide and show the popup */
+        .popup .show {
+            visibility: visible;
+            -webkit-animation: fadeIn 1s;
+            animation: fadeIn 1s;
+        }
+
+        /* Add animation (fade in the popup) */
+        @-webkit-keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* To initially hide new contact form. */
+        #contactForm {
+            display: none;
+        }
+    </style>
+</head>
+<body onload="loadContacts()">
+    <h2 id="welcomeMessage">Welcome</h2>
+
+    <div id="ContactButtons">
+        <button type="button" id="AddContactForm" class="buttons" onclick="showForm();">Add Contact</button>
+        <button type="button" id="SearchContact" class="buttons" onclick="doSearchContact();">Search Contact</button>
+        <button type="button" id="EditContact" class="buttons" onclick="EditContact();">Edit Contact</button>
+        <button type="button" id="DeleteContact" class="buttons" onclick="doDeleteContact();">Delete Contact</button>
+    </div>
+
+    <!-- Form for adding a new contact -->
+    <form id="contactForm">
+        <input type="text" id="firstName" placeholder="First Name" />
+        <input type="text" id="lastName" placeholder="Last Name" />
+        <input type="text" id="Phone" placeholder="XXX-XXX-XXXX" oninput="formatPhoneNumber()" />
+        <input type="text" id="Email" placeholder="name@email.com" />
+        <button type="button" id="AddContact" class="buttons" onclick="addContact()">Add</button>
+        <span id="addResult"></span>
+    </form>
+
+    <!-- Table to display contacts -->
+    <table id="contactTable">
+        <tr>
+            <th>Name</th>
+            <th>Phone Number</th>
+            <th>Email</th>
+        </tr>
+    </table>
+	
+    <script>
+
+        function getCookie(name) {
+            let value = `; ${document.cookie}`;
+            let parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        function setWelcomeMessage() {
+            let firstName = getCookie("firstName");
+            let lastName = getCookie("lastName");
+
+            let welcomeMessage = `Welcome ${firstName ? firstName + ' ' + lastName : 'Guest'}!`;
+            document.getElementById('welcomeMessage').innerText = welcomeMessage;
+        }
+
+        window.onload = function(){
+	    setWelcomeMessage();
+	    loadContacts();
+	};
+
+    </script>
+
+    <script>
+        function showForm() {
+            var contactForm = document.getElementById('contactForm');
+            contactForm.style.display = contactForm.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function formatPhoneNumber() {
+            var phoneInput = document.getElementById('Phone');
+            var phoneValue = phoneInput.value.replace(/\D/g, ''); // Remove non-numeric characters
+
+            if (phoneValue.length > 6) {
+                phoneValue = phoneValue.slice(0, 6) + '-' + phoneValue.slice(6);
+            }
+            if (phoneValue.length > 3) {
+                phoneValue = phoneValue.slice(0, 3) + '-' + phoneValue.slice(3);
+            }
+
+            phoneInput.value = phoneValue;
+        }
+
+        function validateForm() {
+            var firstName = document.getElementById('firstName').value;
+            var lastName = document.getElementById('lastName').value;
+            var phone = document.getElementById('Phone').value;
+            var email = document.getElementById('Email').value;
+            var errorMsg = document.getElementById('addResult');
+            var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Regex pattern for validating email
+            var phonePattern = /^\d{10}$/; // Regex pattern for validating 10-digit phone number
+
+            errorMsg.innerHTML = "";
+
+            // Check if first and last name are provided
+            if (firstName === "" || lastName === "") {
+                errorMsg.innerHTML = "First and Last name are required.";
+                return false;
+            }
+
+            // Check if either email or phone are provided
+            if (email === "" && phone === "") {
+                errorMsg.innerHTML = "You must provide either an email or a phone number.";
+                return false;
+            }
+
+            // Validate email if provided
+            var isEmailValid = email === "" || emailPattern.test(email);
+            // Validate phone number if provided
+            var isPhoneValid = phone === "" || phonePattern.test(phone.replace(/[-\s]/g, ''));
+
+            if (!isEmailValid && !isPhoneValid) {
+                errorMsg.innerHTML = "Not a valid phone number and email.";
+                return false;
+            } else if (!isEmailValid) {
+                errorMsg.innerHTML = "Not a valid email.";
+                return false;
+            } else if (!isPhoneValid) {
+                errorMsg.innerHTML = "Not a valid phone number.";
+                return false;
+            }
+
+            return true;
+        }
+
+    </script>
+
+    <div id="LogOutButton">
+        <button type="button" id="SignOutButton" class="buttons" onclick="doLogout();">Log Out</button>
+    </div>
+
+    <script>
+        function doLogout() {
+            document.cookie = "firstName=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+            document.cookie = "lastName=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+            window.location.href = "index.html";
+        }
+    </script>
+
+    <div id="DeleteAccountButton">
+        <button type="button" id="DeleteAccount" class="buttons" onclick="doDeleteAccount();">Delete Account</button>
+    </div>
+
+    <script>
+        function doDeleteAccount() {
+            const userConfirmed = confirm('Are you sure you want to delete your account? This action cannot be undone and all data will be lost.');
+
+            if (userConfirmed) {
+                window.location.href = "index.html";
+            } else {
+                console.log('Account deletion canceled.');
+            }
+        }
+
+        function doDeleteContact() {
+            const userConfirmed = confirm('Are you sure you want to delete this contact?');
+
+            if (userConfirmed) {
+                console.log('Contact successfully deleted.');
+                // code to delete contact
+            } else {
+                console.log('Contact was not deleted.');
+            }
+        }
+    </script>
+</body>
+</html>
