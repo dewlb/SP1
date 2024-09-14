@@ -1,48 +1,56 @@
-const urlBase = 'http://cop4331-team14.xyz/LAMPAPI'; //Future hyperlink
+const urlBase = 'http://cop4331-team14.xyz/LAMPAPI'; 
 const extension = 'php';
 
 let userId = 0;
 let firstName = "";
 let lastName = "";
 
-/*
-//Working on this (Veronica) [General idea of function for now]
-function doDeleteContact(){
 
-   // Name = document.getElementById("")
-   firstName = document.getElementById("firstName").value;
-   lastName = document.getElementById("lastName").value;
-   let Phone = document.getElementById("Phone").value;
-   let Email = document.getElementById("Email").value;
-   Name = firstName + " " + lastName;
+//Working on this (Veronica)
+function deleteContact(Name, Phone, Email){
 
-   let tmp = { 
-    contact: { Name: Name, Phone: Phone, Email: Email},
-    userId: userId 
-};
+    const userConfirmed = confirm('Are you sure you want to delete this contact?');
 
-let jsonPayload = JSON.stringify(tmp);
-let url = urlBase + '/DeleteContact.' + extension;
+    if (userConfirmed)
+    {    readCookie(); //Obtain userId
 
-let xhr = new XMLHttpRequest();
-xhr.open("POST", url, true);
-xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
 
-xhr.onreadystatechange = function () {
-    if (this.readyState == 4) {
-
-        if (this.status == 200) {
-            console.log("Contact has been sucessfully deleted.");
-        } else {
-            document.getElementById("deleteResult").innerHTML = "Error: " + this.status + " " + xhr.statusText;
-        }
+        let tmp = { 
+         contact: { Name: Name, Phone: Phone, Email: Email},
+         userId: userId 
+     };
+     
+     let jsonPayload = JSON.stringify(tmp);
+     let url = urlBase + '/DeleteContact.' + extension;
+     
+     let xhr = new XMLHttpRequest();
+     xhr.open("POST", url, true);
+     xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+     
+     xhr.onreadystatechange = function () {
+         if (this.readyState == 4) {
+     
+             if (this.status == 200) {
+                 console.log("Contact has been sucessfully deleted.");
+             } else {
+                 document.getElementById("deleteResult").innerHTML = "Error: " + this.status + " " + xhr.statusText;
+             }
+         }
+     };
+     
+     xhr.send(jsonPayload); 
+    
     }
-};
 
-xhr.send(jsonPayload); 
+    else
+    {
+        console.log('Contact was not deleted.');
+    }
+
+
 
 }
-*/
+
 
 // Gracie - working on this
 function loadContacts() {
@@ -95,11 +103,32 @@ function populateContactTable(contacts) {
         let cell2 = row.insertCell(1);
         let cell3 = row.insertCell(2);
         let cell4 = row.insertCell(3);
+        //Veronica here
+        let cell5 = row.insertCell(4);
 
         cell1.innerHTML = contact.Name || 'N/A';   // Adjusted field name
         cell2.innerHTML = contact.Phone || 'N/A';  // Adjusted field name
         cell3.innerHTML = contact.Email || 'N/A';  // Adjusted field name
         cell4.innerHTML = ''; // Assuming there's no additional field for phone number here
+        //Veronica here
+        // Add "Delete" button
+        let deleteButton = document.createElement("button");
+        deleteButton.innerHTML = "Delete";
+        deleteButton.className = "buttons";
+        deleteButton.onclick = function() {
+            deleteContact(contact.Name, contact.Phone, contact.Email); 
+            table.deleteRow(row.rowIndex);
+        };
+        cell5.appendChild(deleteButton);
+
+        // Add "Edit" button
+        let editButton = document.createElement("button");
+        editButton.innerHTML = "Edit";
+        editButton.className = "buttons";
+        editButton.onclick = function() {
+            editContact(); 
+        };
+        cell5.appendChild(editButton);
     });
 }
 
@@ -146,15 +175,38 @@ function addContact() {
                 document.getElementById('Phone').value = "";
                 document.getElementById('Email').value = "";
 
+                loadContacts(); 
+
+                /*
                 // Add contact to table only after successful addition to database
                 var table = document.getElementById('contactTable');
                 var newRow = table.insertRow(-1);
                 var cell1 = newRow.insertCell(0);
                 var cell2 = newRow.insertCell(1);
                 var cell3 = newRow.insertCell(2);
+                var cell4 = newRow.insertCell(3); //For delete and edit
                 cell1.innerHTML = `${firstName} ${lastName}`;
-                cell2.innerHTML = email;
-                cell3.innerHTML = phone;
+                cell2.innerHTML = phone; //Switched from email.
+                cell3.innerHTML = email;
+
+            //Veronica here
+            // Add "Delete" button
+            let deleteButton = document.createElement("button");
+            deleteButton.innerHTML = "Delete";
+            deleteButton.className = "buttons";
+            deleteButton.onclick = function() {
+                deleteContact(); 
+            };
+            cell4.appendChild(deleteButton);
+
+            // Add "Edit" button
+            let editButton = document.createElement("button");
+            editButton.innerHTML = "Edit";
+            editButton.className = "buttons";
+            editButton.onclick = function() {
+                editContact(); 
+            };
+            cell4.appendChild(editButton); */
 
             } else {
                 document.getElementById("addResult").innerHTML = "Error: " + xhr.status + " " + xhr.statusText;
@@ -171,6 +223,11 @@ function doSignUp() {
     let username = document.getElementById("username").value;
     let password = document.getElementById("password").value;
 
+    if (!checkSignUp(firstName, lastName, username, password)) {
+        document.getElementById("registerResult").innerHTML = "Please fill out all fields.";
+        return;
+    }  
+
     // Validate password and check if it meets all requirements
     let passwordFeedback = validatePassword(password);
     if (passwordFeedback !== "Password meets all requirements.") {
@@ -178,11 +235,12 @@ function doSignUp() {
         return;
     }
 
+    /*
     // Validate other fields
     if (!checkSignUp(firstName, lastName, username, password)) {
         document.getElementById("registerResult").innerHTML = "Please fill out all fields.";
         return;
-    }
+    }  */
 
     document.getElementById("registerResult").innerHTML = "";
 
