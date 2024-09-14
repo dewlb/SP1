@@ -95,8 +95,6 @@
     <div id="ContactButtons">
         <button type="button" id="AddContactForm" class="buttons" onclick="showForm();">Add Contact</button>
         <button type="button" id="SearchContact" class="buttons" onclick="doSearchContact();">Search Contact</button>
-        <button type="button" id="EditContact" class="buttons" onclick="EditContact();">Edit Contact</button>
-        <button type="button" id="DeleteContact" class="buttons" onclick="doDeleteContact();">Delete Contact</button>
     </div>
 
     <!-- Form for adding a new contact -->
@@ -232,16 +230,6 @@
             }
         }
 
-        function doDeleteContact() {
-            const userConfirmed = confirm('Are you sure you want to delete this contact?');
-
-            if (userConfirmed) {
-                console.log('Contact successfully deleted.');
-                // code to delete contact
-            } else {
-                console.log('Contact was not deleted.');
-            }
-        }
     </script>
 </body>
 </html>
