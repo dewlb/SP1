@@ -5,49 +5,53 @@ let userId = 0;
 let firstName = "";
 let lastName = "";
 
-
-//Working on this (Veronica)
-function deleteContact(Name, Phone, Email){
-
+//Wrapper function to determine if deletion or not occurs. If true, then row will be deleted as well.
+function delWrapper(Name, Phone, Email)
+{
     const userConfirmed = confirm('Are you sure you want to delete this contact?');
 
-    if (userConfirmed)
-    {    readCookie(); //Obtain userId
-
-
-        let tmp = { 
-         contact: { Name: Name, Phone: Phone, Email: Email},
-         userId: userId 
-     };
-     
-     let jsonPayload = JSON.stringify(tmp);
-     let url = urlBase + '/DeleteContact.' + extension;
-     
-     let xhr = new XMLHttpRequest();
-     xhr.open("POST", url, true);
-     xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-     
-     xhr.onreadystatechange = function () {
-         if (this.readyState == 4) {
-     
-             if (this.status == 200) {
-                 console.log("Contact has been sucessfully deleted.");
-             } else {
-                 document.getElementById("deleteResult").innerHTML = "Error: " + this.status + " " + xhr.statusText;
-             }
-         }
-     };
-     
-     xhr.send(jsonPayload); 
-    
+    if(userConfirmed)
+    {
+        deleteContact(Name, Phone, Email)
+        return true;
     }
 
     else
     {
         console.log('Contact was not deleted.');
+        return false;
     }
+}
 
+//Working on this (Veronica) [General idea of function for now]
+function deleteContact(Name, Phone, Email){
 
+    readCookie(); //Obtain userId
+
+   let tmp = { 
+    contact: { Name: Name, Phone: Phone, Email: Email},
+    userId: userId 
+};
+
+let jsonPayload = JSON.stringify(tmp);
+let url = urlBase + '/DeleteContact.' + extension;
+
+let xhr = new XMLHttpRequest();
+xhr.open("POST", url, true);
+xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
+xhr.onreadystatechange = function () {
+    if (this.readyState == 4) {
+
+        if (this.status == 200) {
+            console.log("Contact has been sucessfully deleted.");
+        } else {
+            document.getElementById("deleteResult").innerHTML = "Error: " + this.status + " " + xhr.statusText;
+        }
+    }
+};
+
+xhr.send(jsonPayload); 
 
 }
 
@@ -116,8 +120,10 @@ function populateContactTable(contacts) {
         deleteButton.innerHTML = "Delete";
         deleteButton.className = "buttons";
         deleteButton.onclick = function() {
-            deleteContact(contact.Name, contact.Phone, contact.Email); 
-            table.deleteRow(row.rowIndex);
+            if(delWrapper(contact.Name, contact.Phone, contact.Email))
+            {
+                table.deleteRow(row.rowIndex);
+            }
         };
         cell5.appendChild(deleteButton);
 
