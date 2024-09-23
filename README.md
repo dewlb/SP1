@@ -20,3 +20,4 @@ Veronica Vargas (Frontend)
 --------------------Contents--------------------
 
 LAMPAPI - A folder of our API files and documentation
+Visual Aids - A folder containing our presentation and accompanying visuals
