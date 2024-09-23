@@ -5,6 +5,64 @@ let userId = 0;
 let firstName = "";
 let lastName = "";
 
+// Gracie
+function doSearchContact() {
+    readCookie();
+
+    const input = document.getElementById('searchInput').value.toLowerCase();
+    const table = document.getElementById('contactTable');
+    const rows = table.getElementsByTagName('tr');
+    let found = false; // Track if any matches are found
+
+    // Loop through all rows, starting from 1 to skip the header row
+    for (let i = 1; i < rows.length; i++) {
+        const cells = rows[i].getElementsByTagName('td');
+        if (cells.length > 0) {
+            const name = cells[0].innerText.toLowerCase(); // Assuming name is in the first column
+
+            if (name.includes(input)) {
+                rows[i].style.display = ''; // Show the row if a match is found
+                found = true;
+            } else {
+                rows[i].style.display = 'none'; // Hide the row if no match
+            }
+        }
+    }
+
+    const messageDisplay = document.getElementById('messageDisplay');
+
+    // Display whether a contact was found or not
+    if (found) {
+    } else if (input) {
+        messageDisplay.innerText = "Contact not found.";
+    } else {
+        messageDisplay.innerText = ""; // Clear message if input is empty
+    }
+
+    // Send JSON payload for some server-side processing (optional)
+    let tmp = { search: input };
+    let jsonPayload = JSON.stringify(tmp);
+    let url = urlBase + '/SearchContacts.' + extension;
+
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
+    xhr.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log("Server received search request.");
+        }
+    };
+
+    xhr.onerror = function() {
+        console.error("Network error: Could not complete search.");
+    };
+
+    xhr.send(jsonPayload);
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
 
 //Working on this (Veronica)
 function editContact(Name, Phone, Email, ID, saveButton, editButton, row)
