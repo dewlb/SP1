@@ -5,6 +5,98 @@ let userId = 0;
 let firstName = "";
 let lastName = "";
 
+
+//Working on this (Veronica)
+function editContact(Name, Phone, Email, ID, saveButton, editButton, row)
+{
+    readCookie(); //Obtain userId
+
+
+    saveButton.style.display = "inline"; 
+    editButton.style.display = "none";
+    console.log("Hi, I'm updating :P");
+    console.log("I'm looking Contact id: " + ID);
+
+    let nameCell = row.cells[0];
+    let phoneCell = row.cells[1];
+    let emailCell = row.cells[2];
+    
+    
+    // Make the cells editable
+    nameCell.contentEditable = true;
+    phoneCell.contentEditable = true;
+    emailCell.contentEditable = true;
+
+    //Make editResult Span
+    let editResult = document.createElement("span");
+    editResult.id = "editResult";
+    document.body.appendChild(editResult); 
+
+    saveButton.onclick = function() 
+    {
+        let newName = nameCell.textContent;
+        let newPhone = phoneCell.textContent;
+        let newEmail = emailCell.textContent;
+        console.log("Name, Phone, Email (NEW):" + newName + " " + newPhone + " " + newEmail );
+
+        console.log("Name, Phone, Email (OLD):" + Name + " " + Phone + " " + Email);
+
+        //Things begin here:
+        let tmp = { 
+            contact: { 
+                Name: Name, 
+                Phone: Phone, 
+                Email: Email 
+            },
+            userId: userId, 
+            contact2: { 
+                Name: newName, 
+                Phone: newPhone, 
+                Email: newEmail 
+            } 
+        };
+        
+        
+        let jsonPayload = JSON.stringify(tmp);
+        let url = urlBase + '/UpdateContact.' + extension;
+
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4) {
+                if (this.status == 200) {
+                    loadContacts();
+                    document.getElementById("editResult").innerHTML = "Changes saved.";
+                } else {
+                    document.getElementById("editResult").innerHTML = "Error: " + this.status + " " + xhr.statusText;
+                }
+            }
+        };
+
+        xhr.onerror = function() {
+            document.getElementById("editResult").innerHTML = "Network Error: Failed to update the contact.";
+        };
+
+        xhr.send(jsonPayload);
+
+        // Make the cells un-editable
+        nameCell.contentEditable = false;
+        phoneCell.contentEditable = false;
+        emailCell.contentEditable = false;
+
+        saveButton.style.display = "none"; 
+        editButton.style.display = "inline";
+        //loadContacts();
+
+
+    } //onClick ends here
+
+
+}
+
+
 //Wrapper function to determine if deletion or not occurs. If true, then row will be deleted as well.
 function delWrapper(Name, Phone, Email)
 {
@@ -23,7 +115,7 @@ function delWrapper(Name, Phone, Email)
     }
 }
 
-//Working on this (Veronica) [General idea of function for now]
+//Working on this (Veronica)
 function deleteContact(Name, Phone, Email){
 
     readCookie(); //Obtain userId
@@ -114,6 +206,7 @@ function populateContactTable(contacts) {
         cell2.innerHTML = contact.Phone || 'N/A';  // Adjusted field name
         cell3.innerHTML = contact.Email || 'N/A';  // Adjusted field name
         cell4.innerHTML = ''; // Assuming there's no additional field for phone number here
+
         //Veronica here
         // Add "Delete" button
         let deleteButton = document.createElement("button");
@@ -127,12 +220,27 @@ function populateContactTable(contacts) {
         };
         cell5.appendChild(deleteButton);
 
+
+        //Add "Save" button (Future Use w/ Edit)
+        let saveButton = document.createElement("button");
+        saveButton.innerHTML = "Save";
+        saveButton.className = "buttons";
+        saveButton.style.display = "none"; //Initially hide Save button unless 'Edit' is clicked.
+         /*saveButton.onclick = function() {
+            //saveWrapper();
+        }; */
+        cell5.appendChild(saveButton);
+        
+
         // Add "Edit" button
         let editButton = document.createElement("button");
         editButton.innerHTML = "Edit";
         editButton.className = "buttons";
         editButton.onclick = function() {
-            editContact(); 
+            console.log("I click and look at looking Contact id: " + contact.ID); //Debugging
+            editContact(contact.Name, contact.Phone, contact.Email, contact.ID, saveButton, editButton, row); 
+            //saveButton.style.display = "inline"; //Comment out
+            //editButton.style.display = "none"; //Comment out
         };
         cell5.appendChild(editButton);
     });
