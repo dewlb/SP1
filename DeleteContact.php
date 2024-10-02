@@ -1,5 +1,6 @@
 <?php
 
+
 // Allow from any origin
 header("Access-Control-Allow-Origin: *");
 
