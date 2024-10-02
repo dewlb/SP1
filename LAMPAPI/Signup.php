@@ -1,4 +1,16 @@
 <?php
+// Allow from any origin
+header("Access-Control-Allow-Origin: *");
+
+// Allow headers and methods
+header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+
+// Handle preflight requests
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    exit(0);
+}
+
 
     //get JSON
     $inData = getRequestInfo();
@@ -19,7 +31,7 @@
     }
     else{
         // prepare SQL statement to check if username already exists
-        $stmt = $conn->prepare("SELECT Login FROM Users WHERE Login = ?");
+        $stmt = $conn->prepare("SELECT Login FROM Users WHERE BINARY Login = ?");
 
         // bind parameters & execute
         $stmt->bind_param("s", $username);
@@ -29,6 +41,7 @@
         $result = $stmt->get_result();
 
         if($result->num_rows > 0){
+            http_response_code(403);
             returnWithError("Username already exists");
         }
         else{
