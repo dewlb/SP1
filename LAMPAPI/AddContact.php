@@ -1,10 +1,25 @@
 <?php
 
+// Allow from any origin
+header("Access-Control-Allow-Origin: *");
+
+// Allow headers and methods
+header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+
+// Handle preflight requests
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    exit(0);
+}
+
+
     //get JSON
     $inData = getRequestInfo();
 
-    //get contact info from JSON
+    //get contact object from JSON
     $contact = $inData["contact"];
+
+    //get info inside contact object
     $contactName = $contact["Name"];
     $contactEmail = $contact["Email"];
     $contactPhone = $contact["Phone"];
